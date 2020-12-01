@@ -134,6 +134,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TRMDataManager.Library\TRMDataManager.Library.csproj">
+      <Project>{7ce252e5-778c-4fa3-9168-ded6c6b3b9bd}</Project>
+      <Name>TRMDataManager.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TRMDesktopUI.Library\TRMDesktopUI.Library.csproj">
       <Project>{580ee2f6-4228-4ba3-bb05-71f0c1605f52}</Project>
       <Name>TRMDesktopUI.Library</Name>
