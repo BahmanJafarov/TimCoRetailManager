@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TRMDataManager.Library.Models;
+using TRMDesktopUI.Library.Models;
 
 namespace TRMDesktopUI.Library.Api
 {
