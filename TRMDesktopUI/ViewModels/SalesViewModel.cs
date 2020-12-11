@@ -3,9 +3,11 @@ using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Helpers;
 using TRMDesktopUI.Library.Models;
@@ -18,17 +20,23 @@ namespace TRMDesktopUI.ViewModels
         private IProductEndpoint _productEndpoint;
         private ISaleEndpoint _saleEndpoint;
         private IMapper _mapper;
+        private StatusInfoViewModel _status;
+        private IWindowManager _window;
         private IConfigHelper _configHelper;
 
         public SalesViewModel(IProductEndpoint productEndpoint, 
                               IConfigHelper configHelper, 
                               ISaleEndpoint saleEndpoint,
-                              IMapper mapper)
+                              IMapper mapper,
+                              StatusInfoViewModel status,
+                              IWindowManager window)
         {
             _productEndpoint = productEndpoint;
             _configHelper = configHelper;
             _saleEndpoint = saleEndpoint;
             _mapper = mapper;
+            _status = status;
+            _window = window;
         }
 
         public async Task LoadProducts()
@@ -41,7 +49,29 @@ namespace TRMDesktopUI.ViewModels
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
-            await LoadProducts();
+            try
+            {
+                await LoadProducts();
+            }
+            catch (Exception ex)
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
+
+                if (ex.Message == "Unauthorized")
+                {
+                    _status.UpdateMessage("Unauthorized Access", "You do not have permission to interact with the Sale Form.");
+                    _window.ShowDialog(_status, null, settings); 
+                }
+                else
+                {
+                    _status.UpdateMessage("Fatal Exception", ex.Message);
+                    _window.ShowDialog(_status, null, settings);
+                }
+                TryClose();
+            }
         }
 
         private BindingList<ProductDisplayModel> _products;
