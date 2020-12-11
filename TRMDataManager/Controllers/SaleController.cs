@@ -10,8 +10,10 @@ using TRMDataManager.Library.Models;
 
 namespace TRMDataManager.Controllers
 {
+    [Authorize]
     public class SaleController : ApiController
     {
+        [Authorize(Roles = "Cashier")]
         public void Post(SaleModel sale)
         {
             SaleData data = new SaleData();
@@ -21,6 +23,7 @@ namespace TRMDataManager.Controllers
         }
 
 
+        [Authorize(Roles = "Admin,Manager")]
         [Route("GetSalesReport")]
         public List<SaleReportModel> GetSalesReport()
         {
